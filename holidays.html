@@ -4,11 +4,12 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>
-            Clock Stopwatch
+            Holidays
         </title>
         <link rel="stylesheet" href="./css/main.css"/>
         <link rel="stylesheet" href="./css/bootstrap.css"/>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
 
     </head>
@@ -101,7 +102,7 @@
                                     </p>
                                 </a>
                             </li>
-                            <li class=" w-100">
+                            <li class="w-100">
                                 <a href="stopwatch.html" class="nav-link text-white">
                                     <i class="bi bi-stopwatch fs-2"></i>
                                     <p>
@@ -111,7 +112,7 @@
                                 </a>
                             </li>
 
-                            <li class="active w-100">
+                            <li class="w-100">
                                 <a href="time.html" class="nav-link text-white">
                                     <i class="bi bi-clock fs-2"></i>
                                     <p>
@@ -128,71 +129,37 @@
                 <div class="col-sm p-3 min-vh-100 bg-body-tertiary">
                     <!-- content -->
                     <div class="d-flex align-items-center justify-content-center">
-                        <div class="clock-container container bg-white" id="clock-container">
-
+                        <div class="clock-container container bg-white"  id="clock-container">
                             <div class="d-flex align-items-center justify-content-end mt-3 ">
                                 <button class="bg-white border-0 px-2" onclick="var el = document.getElementById('clock-container'); el.requestFullscreen();">
                                   <i class="bi bi-arrows-fullscreen"></i>
                                 </button>
-                              </div>
-                              
-                            <h3 class="mt-5 text-center fw-bolder text-secondary">
-                                Time Now
-                            </h3>
-                            <p class="clock-time text-center text-secondary mt-2">
-                                11.50.25
-                                <span>
-                                    AM
-                                </span>
-                            </p>
-                            <p class="clock-date text-center fw-bolder text-secondary">
-                                Wed  -  Jul 5, 2023
-                            </p>
-                        </div>
-
-                    </div>
-
-                    <div class="col-sm p-3 min-vh-100 bg-body-tertiary">
-                        <!-- card individual -->
-                        <div class="row">
-                            <div class="card col-md-3 p-0 m-3">
-                                <div class="card-header fs-5">
-                                New York
-                                </div>
-                                <div class="card-body">
-                                    <p class="world-time text-center text-secondary mt-2">
-                                        11.50.25
-                                        <span>
-                                            AM
-                                        </span>
-                                    </p>
-                                    <p class="world-date text-center fw-bolder text-secondary">
-                                        Today, - 9.30
-                                    </p>
-                                </div>
                             </div>
-                            <!-- card individual end-->
-    
-                            <!-- card individual -->
-                            <div class="card col-md-3 p-0 m-3">
-                                <div class="card-header fs-5">
-                                New York
-                                </div>
-                                <div class="card-body">
-                                    <p class="world-time text-center text-secondary mt-2">
-                                        11.50.25
-                                        <span>
-                                            AM
-                                        </span>
-                                    </p>
-                                    <p class="world-date text-center fw-bolder text-secondary">
-                                        Today, - 9.30
-                                    </p>
-                                </div>
+
+                            <div class="d-flex align-items-center justify-content-center mt-3 flex-column">
+                               <h2 class="fw-bold">Holiday Calender</h2>
+
+                               <!-- <input type="text" class="form-control" id="selectCountry" placeholder="Enter the country name"> -->
+                               <select id="selectCountry" class="form-select w-50 m-4">
+                                <option value="indian">India</option>
+                                <option value="usa">USA</option>
+                                <option value="uk">UK</option>
+                                <option value="bm">Bermuda</option>
+                                <option value="swedish">Sweden</option>
+                                <option value="china">China</option>
+                                <option value="singapore">Singapore</option>
+                                <option value="spain">Spain</option>
+                              </select>
+
+                              <div class="row justify-content-center" id="output"></div>
+                       
+
                             </div>
-                            <!-- card individual end-->
-                        </div>
+
                         
+                            
+                        </div>
+
                     </div>
 
                 </div>
@@ -203,6 +170,33 @@
 
 
         <!--Main Navigation-->
+
+        <!-- Holiday -->
+        <script type="text/javascript">
+            $("#selectCountry").change(function(e) {
+          $("#output").html("Loading...");
+          var country = $("#selectCountry").val();
+          var calendarUrl = 'https://www.googleapis.com/calendar/v3/calendars/en.' + country 
+                          + '%23holiday%40group.v.calendar.google.com/events?key=AIzaSyDfKWdpeRjC-731P6PQkR8DsKuuVewHpqc';
+        
+          $.getJSON(calendarUrl)
+            .success(function(data) {
+                console.log(data);
+              $("#output").empty();
+              for (item in data.items) {
+                $("#output").append(
+                  "<div class=\"card col-md-3 m-3 pt-3 text-center\"><h5 class=\"fw-bold holiday\">" + data.items[item].summary + "<h5>" +
+                  "<h5 class=\"holiday\">" + data.items[item].start.date + "<h5> </div>"
+                );
+              }
+            })
+            .error(function(error) {
+              $("#output").html("An error occurred.");
+            })
+        });
+        $("#selectCountry").trigger("change");
+        </script>
+        <!-- Holiday -->
 
         <script>
             // Get the toggle button element
